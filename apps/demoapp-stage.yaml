@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: demoapp-stage
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: stage
+  source:
+    repoURL: https://github.com/Grbic14/gitops-helm-chart.git
+    targetRevision: main
+    path: charts/demoapp
+    helm:
+      values: |-
+        image:
+          repository: nginx
+          tag: "1.26"
+        replicaCount: 2
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
